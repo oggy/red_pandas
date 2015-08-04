@@ -25,5 +25,25 @@ module RedPandas
         [@data[0].size, @data.size]
       end
     end
+
+    def [](column_names)
+      if column_names.respond_to?(:to_ary)
+        column_names.map { |c| @data[column_index(c)] }
+      else
+        @data[column_index(column_names)]
+      end
+    end
+
+    def column(name)
+      index = @data.index(name.to_sym) and
+        @data[index]
+    end
+
+    private
+
+    def column_index(column_name)
+      @names.index(column_name.to_sym) or
+        raise ArgumentError, "invalid colume name: #{column_name}"
+    end
   end
 end

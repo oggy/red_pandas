@@ -56,4 +56,42 @@ describe RedPandas::DataFrame do
       data_frame.shape.must_equal [0, 1]
     end
   end
+
+  describe "#[]" do
+    it "returns a single column" do
+      a = RedPandas::Series.new([1, 2], type: :any)
+      b = RedPandas::Series.new([3, 4], type: :any)
+      frame = RedPandas::DataFrame.new(a: a, b: b)
+      series = frame[:a]
+      series.must_be_instance_of(RedPandas::Series)
+      series.must_equal a
+    end
+
+    it "accepts a string for the column" do
+      a = RedPandas::Series.new([1, 2], type: :any)
+      b = RedPandas::Series.new([3, 4], type: :any)
+      frame = RedPandas::DataFrame.new(a: a, b: b)
+      series = frame['a']
+      series.must_be_instance_of(RedPandas::Series)
+      series.must_equal a
+    end
+
+    it "returns multiple columns" do
+      a = RedPandas::Series.new([1, 2], type: :any)
+      b = RedPandas::Series.new([3, 4], type: :any)
+      frame = RedPandas::DataFrame.new(a: a, b: b)
+      series = frame[[:a, :b]]
+      series.map(&:class).must_equal [RedPandas::Series]*2
+      series.must_equal [a, b]
+    end
+
+    it "accepts strings for columns" do
+      a = RedPandas::Series.new([1, 2], type: :any)
+      b = RedPandas::Series.new([3, 4], type: :any)
+      frame = RedPandas::DataFrame.new(a: a, b: b)
+      series = frame[['a', 'b']]
+      series.map(&:class).must_equal [RedPandas::Series]*2
+      series.must_equal [a, b]
+    end
+  end
 end
