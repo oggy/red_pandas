@@ -34,4 +34,27 @@ describe RedPandas::Series do
       series.size.must_equal 2
     end
   end
+
+  describe "#select_by_position" do
+    it "supports selecting a value by integer" do
+      series = RedPandas::Series.new([1, 2], type: :any)
+      series.select_by_position(1).must_equal 2
+    end
+
+    it "supports selecting by array of integers" do
+      series = RedPandas::Series.new([1, 2, 3], type: :any)
+      result = series.select_by_position([0, 2])
+      result.must_be_instance_of RedPandas::Series
+      result.type_name.must_equal :any
+      result.data.must_equal [1, 3]
+    end
+
+    it "supports selecting by range" do
+      series = RedPandas::Series.new([1, 2, 3], type: :any)
+      result = series.select_by_position(0..1)
+      result.must_be_instance_of RedPandas::Series
+      result.type_name.must_equal :any
+      result.data.must_equal [1, 2]
+    end
+  end
 end

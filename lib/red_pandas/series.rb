@@ -18,5 +18,18 @@ module RedPandas
     def size
       @data.size
     end
+
+    def select_by_position(selector)
+      case selector
+      when Range
+        data = @data[selector]
+        self.class.new(data, type: type)
+      when Enumerable
+        data = selector.map { |index| @data[index] }
+        self.class.new(data, type: type)
+      else
+        @data[selector]
+      end
+    end
   end
 end

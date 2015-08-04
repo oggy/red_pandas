@@ -39,6 +39,14 @@ module RedPandas
         @data[index]
     end
 
+    def select_by_index(selector)
+      columns = {}
+      @names.zip(@data).map do |name, data|
+        columns[name] = data.select_by_index(selector)
+      end.to_h
+      self.class.new(columns)
+    end
+
     private
 
     def column_index(column_name)
