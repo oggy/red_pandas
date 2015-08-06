@@ -94,4 +94,38 @@ describe RedPandas::DataFrame do
       series.must_equal [a, b]
     end
   end
+
+  describe "#select_by_position" do
+    it "supports selecting a row by integer" do
+      a = RedPandas::Series.new([1, 2], type: :any)
+      b = RedPandas::Series.new([3, 4], type: :any)
+      frame = RedPandas::DataFrame.new(a: a, b: b)
+
+      row = frame.select_by_position(1)
+      row.must_be_instance_of RedPandas::Series
+      row.data.must_equal [2, 4]
+    end
+
+    it "supports selecting rows by array of integers" do
+      a = RedPandas::Series.new([1, 2, 3], type: :any)
+      b = RedPandas::Series.new([4, 5, 6], type: :any)
+      frame = RedPandas::DataFrame.new(a: a, b: b)
+
+      subframe = frame.select_by_position([0, 2])
+      subframe.must_be_instance_of RedPandas::DataFrame
+      subframe['a'].data.must_equal [1, 3]
+      subframe['b'].data.must_equal [4, 6]
+    end
+
+    it "supports selecting rows by range" do
+      a = RedPandas::Series.new([1, 2, 3], type: :any)
+      b = RedPandas::Series.new([4, 5, 6], type: :any)
+      frame = RedPandas::DataFrame.new(a: a, b: b)
+
+      subframe = frame.select_by_position(1..2)
+      subframe.must_be_instance_of RedPandas::DataFrame
+      subframe['a'].data.must_equal [2, 3]
+      subframe['b'].data.must_equal [5, 6]
+    end
+  end
 end

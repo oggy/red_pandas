@@ -39,12 +39,20 @@ module RedPandas
         @data[index]
     end
 
-    def select_by_index(selector)
-      columns = {}
-      @names.zip(@data).map do |name, data|
-        columns[name] = data.select_by_index(selector)
-      end.to_h
-      self.class.new(columns)
+    def select_by_position(selector)
+      case selector
+      when Range, Enumerable
+        columns = {}
+        @names.zip(@data) do |name, data|
+          columns[name] = data.select_by_position(selector)
+        end
+        self.class.new(columns)
+      else
+        row = @data.map do |data|
+          data.select_by_position(selector)
+        end
+        Series.new(row, type: :any)
+      end
     end
 
     private
