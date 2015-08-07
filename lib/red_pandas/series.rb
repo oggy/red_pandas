@@ -11,6 +11,10 @@ module RedPandas
       type.type_name
     end
 
+    def empty?
+      @data.empty?
+    end
+
     def [](arg)
       @data[arg]
     end

@@ -15,6 +15,18 @@ describe RedPandas::Series do
     end
   end
 
+  describe "#empty?" do
+    it "returns true if the series is empty" do
+      series = RedPandas::Series.new([], type: :any)
+      series.empty?.must_equal true
+    end
+
+    it "returns false otherwise" do
+      series = RedPandas::Series.new([1], type: :any)
+      series.empty?.must_equal false
+    end
+  end
+
   describe "#[]" do
     it "returns the value at the given index" do
       series = RedPandas::Series.new([1, 2], type: :any)
