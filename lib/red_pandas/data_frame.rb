@@ -18,6 +18,10 @@ module RedPandas
       @data.map { |series| series.type.type_name }
     end
 
+    def empty?
+      @data.empty? || @data[0].empty?
+    end
+
     def shape
       if @data.empty?
         [0, 0]

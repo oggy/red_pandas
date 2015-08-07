@@ -37,6 +37,23 @@ describe RedPandas::DataFrame do
     end
   end
 
+  describe "#empty?" do
+    it "is true if there are no columns" do
+      frame = RedPandas::DataFrame.new
+      frame.empty?.must_equal true
+    end
+
+    it "is true if there are columns but they're all empty" do
+      frame = RedPandas::DataFrame.new(a: [])
+      frame.empty?.must_equal true
+    end
+
+    it "is false otherwise" do
+      frame = RedPandas::DataFrame.new(a: [nil])
+      frame.empty?.must_equal false
+    end
+  end
+
   describe "#shape" do
     it "returns the correct shape for nonzero dimensions" do
       a = RedPandas::Series.new([1, 2, 3], type: :any)
