@@ -145,4 +145,22 @@ describe RedPandas::DataFrame do
       subframe['b'].data.must_equal [5, 6]
     end
   end
+
+  describe "#filter" do
+    it "returns a DataFrame with rows that pass the given predicate" do
+      a = RedPandas::Series.new([1, 2, 3], type: :any)
+      b = RedPandas::Series.new([4, 5, 6], type: :any)
+      frame = RedPandas::DataFrame.new(a: a, b: b)
+
+      subframe = frame.filter { |row| row[:a] % 2 == 1 }
+      subframe.must_be_instance_of RedPandas::DataFrame
+      subframe['a'].data.must_equal [1, 3]
+      subframe['b'].data.must_equal [4, 6]
+    end
+
+    it "raises ArgumentError if no block is given" do
+      frame = RedPandas::DataFrame.new
+      -> { frame.filter }.must_raise ArgumentError
+    end
+  end
 end

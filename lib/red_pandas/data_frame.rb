@@ -59,11 +59,36 @@ module RedPandas
       end
     end
 
+    def filter
+      block_given? or
+        raise ArgumentError, "no block given"
+
+      empty? and
+        return DataFrame.new(@names.zip(@data).to_h)
+
+      rows = []
+      @data[0].size.times do |i|
+        row_values = @data.map { |column| column[i] }
+        row = @names.zip(row_values).to_h
+        rows << row_values if yield(row)
+      end
+
+      columns = @data.zip(rows.transpose).map do |original_column, values|
+        RedPandas::Series.new(values, type: original_column.type)
+      end
+      names_to_columns = @names.zip(columns).to_h
+      DataFrame.new(names_to_columns)
+    end
+
     private
 
     def column_index(column_name)
       @names.index(column_name.to_sym) or
         raise ArgumentError, "invalid colume name: #{column_name}"
+    end
+
+    def make_row(values)
+      @names.zip(values).to_h
     end
   end
 end
